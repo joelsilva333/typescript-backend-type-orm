@@ -1,18 +1,20 @@
-version: "3"
 services:
   postgres:
-    image: postgres:latest
+    image: postgres
     environment:
-      POSTGRES_USER:  ${DB_USER:-admin}
-      POSTGRES_PASSWORD:  ${DB_PASSWORD:-admin}
-      PGDATA: /data/postgres
-    volumes:
-      - ${PWD}/.docker/postgres/data/postgres:/data/postgres
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-admin}
     ports:
       - "5432:5432"
     restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - postgres
+
 networks:
   postgres:
     driver: bridge
+
+volumes:
+  postgres_data:
