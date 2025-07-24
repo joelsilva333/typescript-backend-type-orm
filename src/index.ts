@@ -1,5 +1,6 @@
 import dotenv from "dotenv"
 import express from "express"
+import './connection'
 
 dotenv.config()
 const PORT = process.env.PORT || 8080
