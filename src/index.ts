@@ -7,6 +7,9 @@ dotenv.config()
 const PORT = process.env.PORT || 8080
 const app = express()
 
+app.use(express.json())
+app.use(express.urlencoded({ extended: true}))
+
 app.get("/api/products/", productController.findAll)
 app.post("/api/products/", productController.create)
 

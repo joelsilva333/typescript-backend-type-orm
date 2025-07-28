@@ -25,9 +25,11 @@ class ProductController {
     const productRepository = AppDataSource.getRepository(Product);
     const product = new Product();
 
-    product.name = "Default Product Name";
-    product.description = "This is a sample product description.";
-    product.weight = 90;
+    const { name, description, weight } = request.body;
+
+    product.name = name;
+    product.description = description;
+    product.weight = weight;
 
     const productDb = await productRepository.save(product);
 
