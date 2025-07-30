@@ -8,10 +8,12 @@ const PORT = process.env.PORT || 8080
 const app = express()
 
 app.use(express.json())
-app.use(express.urlencoded({ extended: true}))
+app.use(express.urlencoded({ extended: true }))
 
 app.get("/api/products/", productController.findAll)
 app.post("/api/products/", productController.create)
+app.get("/api/products/:id", productController.findOne)
+app.put("/api/products/:id", productController.update)
 
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`)
