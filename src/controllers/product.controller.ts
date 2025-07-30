@@ -10,28 +10,67 @@ class ProductController {
 		this.productRepository = AppDataSource.getRepository(Product)
 	}
 
+	/**
+	 * @swagger
+	 * /api/products/:
+	 *   get:
+	 *     summary: Lista todos os produtos
+	 *     tags:
+	 *       - Produtos
+	 *     responses:
+	 *       200:
+	 *         description: Produtos encontrados com sucesso
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               type: object
+	 *               properties:
+	 *                 data:
+	 *                   type: array
+	 *                   items:
+	 *                     $ref: '#/components/schemas/Product'
+	 *                 message:
+	 *                   type: string
+	 */
 	async findAll(request: Request, response: Response): Promise<Response> {
-		const productRepository = AppDataSource.getRepository(Product)
-
-		const products = await productRepository.find()
-
+		const products = await this.productRepository.find()
 		return response.status(200).send({
 			data: products,
 			message: "Produtos encontrados com sucesso",
 		})
 	}
 
+	/**
+	 * @swagger
+	 * /api/products/:
+	 *   post:
+	 *     summary: Cria um novo produto
+	 *     tags:
+	 *       - Produtos
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             $ref: '#/components/schemas/ProductInput'
+	 *     responses:
+	 *       201:
+	 *         description: Produto criado com sucesso
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               type: object
+	 *               properties:
+	 *                 data:
+	 *                   $ref: '#/components/schemas/Product'
+	 *                 message:
+	 *                   type: string
+	 */
 	async create(request: Request, response: Response): Promise<Response> {
-		const productRepository = AppDataSource.getRepository(Product)
-		const product = new Product()
-
 		const { name, description, weight } = request.body
 
-		product.name = name
-		product.description = description
-		product.weight = weight
-
-		const productDb = await productRepository.save(product)
+		const product = this.productRepository.create({ name, description, weight })
+		const productDb = await this.productRepository.save(product)
 
 		return response.status(201).send({
 			data: productDb,
@@ -39,10 +78,37 @@ class ProductController {
 		})
 	}
 
+	/**
+	 * @swagger
+	 * /api/products/{id}:
+	 *   get:
+	 *     summary: Busca um produto por ID
+	 *     tags:
+	 *       - Produtos
+	 *     parameters:
+	 *       - name: id
+	 *         in: path
+	 *         required: true
+	 *         schema:
+	 *           type: string
+	 *     responses:
+	 *       200:
+	 *         description: Produto encontrado com sucesso
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               type: object
+	 *               properties:
+	 *                 data:
+	 *                   $ref: '#/components/schemas/Product'
+	 *                 message:
+	 *                   type: string
+	 *       404:
+	 *         description: Produto não encontrado
+	 */
 	async findOne(request: Request, response: Response): Promise<Response> {
 		const { id } = request.params
-		const productRepository = AppDataSource.getRepository(Product)
-		const product = await productRepository.findOneBy({ id })
+		const product = await this.productRepository.findOneBy({ id })
 
 		if (!product) {
 			return response.status(404).send({
@@ -56,35 +122,60 @@ class ProductController {
 		})
 	}
 
+	/**
+	 * @swagger
+	 * /api/products/{id}:
+	 *   put:
+	 *     summary: Atualiza um produto por ID
+	 *     tags:
+	 *       - Produtos
+	 *     parameters:
+	 *       - name: id
+	 *         in: path
+	 *         required: true
+	 *         schema:
+	 *           type: string
+	 *     requestBody:
+	 *       required: true
+	 *       content:
+	 *         application/json:
+	 *           schema:
+	 *             $ref: '#/components/schemas/ProductInput'
+	 *     responses:
+	 *       200:
+	 *         description: Produto atualizado com sucesso
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               type: object
+	 *               properties:
+	 *                 data:
+	 *                   $ref: '#/components/schemas/Product'
+	 *                 message:
+	 *                   type: string
+	 *       404:
+	 *         description: Produto não encontrado
+	 */
 	async update(request: Request, response: Response): Promise<Response> {
 		const { id } = request.params
-		const productRepository = AppDataSource.getRepository(Product)
-		let product
 
 		try {
-			product = await productRepository.findOneByOrFail({ id })
-		} catch (error) {
-			return response.status(404).send({
-				message: "Produto não encontrado",
-			})
-		}
+			const product = await this.productRepository.findOneByOrFail({ id })
+			const { name, description, weight } = request.body
 
-		const { name, description, weight } = request.body
+			product.name = name
+			product.description = description
+			product.weight = weight
 
-		product.name = name
-		product.description = description
-		product.weight = weight
-
-		try {
-			const productDb = await productRepository.save(product)
+			const productDb = await this.productRepository.save(product)
 
 			return response.status(200).send({
 				data: productDb,
 				message: "Produto atualizado com sucesso",
 			})
 		} catch (error) {
-			return response.status(500).send({
-				message: "Erro interno ao atualizar o produto",
+			return response.status(404).send({
+				message: "Produto não encontrado",
 			})
 		}
 	}
