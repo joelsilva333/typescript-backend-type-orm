@@ -1,4 +1,3 @@
-// src/swagger.ts
 import swaggerJSDoc from "swagger-jsdoc";
 
 export const swaggerSpec = swaggerJSDoc({

@@ -18,6 +18,7 @@ app.get("/api/products/", productController.findAll)
 app.post("/api/products/", productController.create)
 app.get("/api/products/:id", productController.findOne)
 app.put("/api/products/:id", productController.update)
+app.delete("/api/products/:id", productController.delete)
 
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`)
