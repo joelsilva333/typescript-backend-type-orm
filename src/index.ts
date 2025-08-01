@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
 import express from "express";
-import "./connection";
-import productController from "./controllers/product.controller";
+import "@/connection";
+import productController from "@/controllers/product.controller";
 import swaggerUi from "swagger-ui-express";
-import { swaggerSpec } from "./swagger";
+import { swaggerSpec } from "@/swagger";
 import cors from "cors";
 
 dotenv.config();
