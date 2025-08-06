@@ -16,3 +16,4 @@ routes.get("/", (request: Request, res: Response) => {
 })
 
 export default routes
+ 

@@ -3,12 +3,13 @@ import AppDataSource from "@/database/connection"
 import { Product } from "@/entities/product.entity"
 import { Repository } from "typeorm"
 import { validate } from "class-validator"
+import { ProductRepository } from "@/repositories/product.repository"
 
 class ProductController {
-	private productRepository: Repository<Product>
+	private productRepository: ProductRepository
 
 	constructor() {
-		this.productRepository = AppDataSource.getRepository(Product)
+		this.productRepository = new ProductRepository()
 	}
 
 	/**
@@ -33,10 +34,9 @@ class ProductController {
 	 *                 message:
 	 *                   type: string
 	 */
-	async findAll(request: Request, response: Response): Promise<Response> {
-		const productRepository = AppDataSource.getRepository(Product)
+	 findAll = async (request: Request, response: Response): Promise<Response> => {
+		const products = await this.productRepository.getAll()
 
-		const products = await productRepository.find()
 		return response.status(200).send({
 			data: products,
 			message: "Produtos encontrados com sucesso",
@@ -195,7 +195,7 @@ class ProductController {
 				})
 			}
 
-			const productDb = await this.productRepository.save(product)
+			 const productDb = await this.productRepository.save(product)
 
 			return response.status(200).send({
 				data: productDb,

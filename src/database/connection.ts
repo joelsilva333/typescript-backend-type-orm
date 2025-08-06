@@ -10,7 +10,7 @@ const AppDataSource = new DataSource({
   database: "ts_node",
   logging: true,
   synchronize: true,
-  entities: [__dirname + "/**/*.entity.ts"],
+  entities: [__dirname + "/../**/*.entity.ts"],
   migrations: [],
   subscribers: [],
 });
