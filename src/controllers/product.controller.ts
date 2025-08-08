@@ -68,7 +68,23 @@ class ProductController {
 	 *                 message:
 	 *                   type: string
 	 */
-	async create(request: Request, response: Response): Promise<Response> {
+	create = async (request: Request, response: Response): Promise<Response> => {
+		const { name, description, weight } = request.body
+
+		const dto = new Product()
+		dto.name = name
+		dto.description = description
+		dto.weight = weight
+		
+		const productDb = await this.productRepository.create(dto)
+
+		return response.status(201).send({
+			data: productDb,
+			message: "Produto criado com sucesso",
+		})
+	}
+
+	/* create = async (request: Request, response: Response): Promise<Response> => {
 		const { name, description, weight } = request.body
 		const productRepository = AppDataSource.getRepository(Product)
 
@@ -92,7 +108,7 @@ class ProductController {
 			data: productDb,
 			message: "Produto criado com sucesso",
 		})
-	}
+	} */
 
 	/**
 	 * @swagger
