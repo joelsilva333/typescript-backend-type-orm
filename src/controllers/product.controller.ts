@@ -90,32 +90,6 @@ class ProductController {
     });
   };
 
-  /* create = async (request: Request, response: Response): Promise<Response> => {
-		const { name, description, weight } = request.body
-		const productRepository = AppDataSource.getRepository(Product)
-
-		const product = productRepository.create({
-			name,
-			description,
-			weight,
-		})
-
-		const errors = await validate(product)
-		if (errors.length > 0) {
-			return response.status(422).send({
-				message: "Erro de validação",
-				errors: errors.map((error) => error.constraints),
-			})
-		}
-
-		const productDb = await productRepository.save(product)
-
-		return response.status(201).send({
-			data: productDb,
-			message: "Produto criado com sucesso",
-		})
-	} */
-
   /**
    * @swagger
    * /api/products/{id}:
@@ -146,9 +120,8 @@ class ProductController {
    */
   async findOne(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
-    const productRepository = AppDataSource.getRepository(Product);
 
-    const product = await productRepository.findOneBy({ id });
+    const product = await this.productRepository.findOne(id);
 
     if (!product) {
       return response.status(404).send({
