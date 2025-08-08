@@ -118,7 +118,7 @@ class ProductController {
    *       404:
    *         description: Produto não encontrado
    */
-  async findOne(request: Request, response: Response): Promise<Response> {
+  findOne = async (request: Request, response: Response): Promise<Response> => {
     const { id } = request.params;
 
     const product = await this.productRepository.findOne(id);
@@ -133,7 +133,7 @@ class ProductController {
       data: product,
       message: "Produto encontrado com sucesso",
     });
-  }
+  };
 
   /**
    * @swagger
